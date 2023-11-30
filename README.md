@@ -10,7 +10,7 @@
 4. Once the meeting has been created and joined, using EventBridge notifications, a `CreateMediaStreamPipelineCommand` request is made to start KVS output from the Amazon Chime SDK meeting
 5. The Amazon Chime SDK meeting begins streaming the attendee's audio to KVS
 6. Once the KVS stream is established, an EventBridge notification triggers the EventBridge Lambda which invokes the Fargate container
-7. Withing the KVS Consumer
+7. Within the KVS Consumer
    1. The KVS stream reads the MKV data from the KVS stream
    2. This stream is passed through `ffmpeg` to convert AAC to OPUS
    3. The OPUS stream is sent to Amazon Transcribe for processing
@@ -68,7 +68,7 @@ async function startMediaStreamPipeline(eventDetail: MeetingEventDetails) {
 }
 ```
 
-## Invoking KVS Consumer
+## Invoking the KVS Consumer
 
 Once the Amazon Chime SDK media stream has started, the EventBridge notification will trigger.
 
@@ -132,7 +132,7 @@ const result = await mediaClient.getMedia(fragmentSelector);
 
 This will get the media from the KVS stream for processing.
 
-## Converting stream
+## Converting the stream
 
 The incoming KVS stream from Amazon Chime SDK meeting is in AAC format. Because Amazon Transcribe cannot support AAC format, we must convert it to something it can. We will use [`ffmpeg`](https://ffmpeg.org/) to convert the stream from AAC or OPUS which can be used by Amazon Transcribe.
 
@@ -175,6 +175,8 @@ const response = await client.send(command);
 ```
 
 ## Processing response
+
+> You will need to [enable Bedrock model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) for your account to use this feature. This demo uses `anthropic.claude-instant-v1` as the default but you can experiment with other foundation models.
 
 When we get a response from Amazon Transcribe, we must process it. In this demo, we're looking for non-partial results. These transcriptions will contain an entire segment that be can used with Amazon Bedrock.
 
