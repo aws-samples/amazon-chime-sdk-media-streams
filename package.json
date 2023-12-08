@@ -56,6 +56,7 @@
     "constructs": "^10.0.5",
     "dotenv": "^16.3.1",
     "esbuild": "^0.19.8",
+    "fastify": "^4.24.3",
     "fluent-ffmpeg": "^2.1.2",
     "fs-extra": "^11.2.0"
   },

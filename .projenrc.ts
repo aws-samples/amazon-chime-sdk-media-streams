@@ -33,6 +33,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '@types/aws-lambda',
     'aws-lambda',
     'fluent-ffmpeg',
+    'fastify',
     'dotenv',
     'axios',
   ],

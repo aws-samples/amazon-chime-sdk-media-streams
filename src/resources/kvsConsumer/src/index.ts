@@ -87,7 +87,7 @@ async function readKVSConvertWriteAndTranscribe({
   streamArn,
   meetingId,
 }: KVSStreamDetails): Promise<void> {
-  console.log('Initializing media streamsclient');
+  console.log('Initializing media stream client');
   const kvClient = new KinesisVideoClient({ region: REGION });
   const getDataCmd = new GetDataEndpointCommand({
     APIName: APIName.GET_MEDIA,
