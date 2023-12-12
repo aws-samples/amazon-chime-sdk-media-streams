@@ -248,7 +248,7 @@ function preparePrompt(promptRequest: string) {
   return {
     body: JSON.stringify({
       prompt:
-        '\n\nHuman: This is a questions from a caller.  In a few sentences provide an answer to this question.\n\n' +
+        '\n\nHuman: This is a question from a caller.  In a few sentences provide an answer to this question.\n\n' +
         promptRequest +
         '\n\nAssistant:',
       max_tokens_to_sample: 4000,

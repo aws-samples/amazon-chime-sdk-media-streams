@@ -86,6 +86,10 @@ export class AmazonChimeSDKMediaStreams extends Stack {
     new CfnOutput(this, 'PhoneNumber', {
       value: sipMediaApplication.phoneNumber.phoneNumber,
     });
+
+    new CfnOutput(this, 'LogGroup', {
+      value: kvsConsumer.logGroup.logGroupName,
+    });
   }
 }
 

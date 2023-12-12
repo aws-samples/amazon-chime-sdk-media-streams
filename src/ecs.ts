@@ -1,4 +1,4 @@
-import { Stack } from 'aws-cdk-lib';
+import { RemovalPolicy, Stack } from 'aws-cdk-lib';
 import { AdjustmentType } from 'aws-cdk-lib/aws-autoscaling';
 import { IMetric } from 'aws-cdk-lib/aws-cloudwatch';
 import { Table } from 'aws-cdk-lib/aws-dynamodb';
@@ -7,6 +7,7 @@ import {
   ContainerImage,
   CpuArchitecture,
   OperatingSystemFamily,
+  LogDriver,
 } from 'aws-cdk-lib/aws-ecs';
 import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patterns';
 import { ApplicationLoadBalancer } from 'aws-cdk-lib/aws-elasticloadbalancingv2';
@@ -17,6 +18,7 @@ import {
   PolicyDocument,
   ServicePrincipal,
 } from 'aws-cdk-lib/aws-iam';
+import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { ChimeSipMediaApp } from 'cdk-amazon-chime-resources';
 import { Construct } from 'constructs';
 
@@ -30,6 +32,8 @@ interface ECSResourcesProps {
 
 export class ECSResources extends Construct {
   fargateService: ApplicationLoadBalancedFargateService;
+  logGroup: LogGroup;
+
   constructor(scope: Construct, id: string, props: ECSResourcesProps) {
     super(scope, id);
 
@@ -91,6 +95,12 @@ export class ECSResources extends Construct {
       ],
     });
 
+    this.logGroup = new LogGroup(this, 'logGroup', {
+      logGroupName: '/AmazonChimeSDKMediaStreams',
+      retention: RetentionDays.ONE_WEEK,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+
     const alb = new ApplicationLoadBalancer(this, 'alb', {
       vpc: props.vpc,
       vpcSubnets: { subnetType: SubnetType.PRIVATE_WITH_EGRESS },
@@ -105,6 +115,10 @@ export class ECSResources extends Construct {
         taskImageOptions: {
           image: ContainerImage.fromAsset('src/resources/kvsConsumer'),
           taskRole: kvsConsumerRole,
+          logDriver: LogDriver.awsLogs({
+            logGroup: this.logGroup,
+            streamPrefix: '/kvsConsumer',
+          }),
           environment: {
             SIP_MEDIA_APPLICATION_ID: props.sipMediaApplication.sipMediaAppId,
             MEETING_TABLE: props.meetingTable.tableName,
