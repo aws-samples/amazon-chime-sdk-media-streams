@@ -29,7 +29,7 @@ import Fastify from 'fastify';
 import ffmpeg from 'fluent-ffmpeg';
 
 const fastify = Fastify({
-  logger: true,
+  logger: false,
 });
 
 const REGION = process.env.REGION || 'us-east-1';
@@ -118,8 +118,8 @@ async function readKVSConvertWriteAndTranscribe({
     // .on('stderr', (data) => {
     //   console.log(data);
     // })
-    .audioCodec('libopus')
-    .format('opus')
+    .audioCodec('pcm_s16le')
+    .format('s16le')
     .output(outputStream, { end: true })
     .run();
 
@@ -151,7 +151,7 @@ async function startTranscription(stream: Readable, meetingId: string) {
   try {
     const command = new StartStreamTranscriptionCommand({
       LanguageCode: LanguageCode.EN_US,
-      MediaEncoding: MediaEncoding.OGG_OPUS,
+      MediaEncoding: MediaEncoding.PCM,
       MediaSampleRateHertz: 48000,
       AudioStream: audioStream(),
     });
@@ -160,7 +160,7 @@ async function startTranscription(stream: Readable, meetingId: string) {
 
     if (response.TranscriptResultStream) {
       for await (const event of response.TranscriptResultStream) {
-        console.log(event);
+        // console.log(event);
         if (
           event.TranscriptEvent &&
           event.TranscriptEvent &&
