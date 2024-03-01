@@ -237,7 +237,7 @@ async function createMeeting() {
       new CreateMeetingWithAttendeesCommand({
         ClientRequestToken: randomUUID(),
         MediaRegion: 'us-east-1',
-        ExternalMeetingId: randomUUID(),
+        ExternalMeetingId: 'MediaStreams',
         Attendees: [{ ExternalUserId: randomUUID() }],
       }),
     );
