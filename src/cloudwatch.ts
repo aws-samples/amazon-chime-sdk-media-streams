@@ -1,4 +1,3 @@
-import { Statistic } from '@aws-sdk/client-cloudwatch';
 import { Stack, Duration, RemovalPolicy } from 'aws-cdk-lib';
 import {
   Metric,
@@ -21,7 +20,7 @@ export class CloudWatchResources extends Construct {
       metricName: 'CallCount',
       namespace: 'AmazonChimeSDKKVSProcessing',
       region: Stack.of(this).region,
-      statistic: Statistic.Average,
+      statistic: Stats.AVERAGE,
       period: Duration.minutes(1),
     });
 
@@ -29,7 +28,7 @@ export class CloudWatchResources extends Construct {
       metricName: 'TaskCount',
       namespace: 'AmazonChimeSDKKVSProcessing',
       region: Stack.of(this).region,
-      statistic: Statistic.Average,
+      statistic: Stats.AVERAGE,
       period: Duration.minutes(1),
     });
 
@@ -37,7 +36,7 @@ export class CloudWatchResources extends Construct {
       metricName: 'CallsPerTask',
       namespace: 'AmazonChimeSDKKVSProcessing',
       region: Stack.of(this).region,
-      statistic: Statistic.Average,
+      statistic: Stats.AVERAGE,
       period: Duration.minutes(1),
     });
 
